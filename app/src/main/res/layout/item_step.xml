@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp" >
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/epita_logo_mini" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="24sp"
+        android:paddingLeft="50px"
+        android:layout_toRightOf="@+id/img"
+        android:gravity="center_vertical"
+        android:text="HomeTown" />
+
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="14sp"
+        android:paddingRight="10px"
+        android:gravity="bottom|right"
+        android:text="1h24min"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp" />
+
+
+</RelativeLayout>

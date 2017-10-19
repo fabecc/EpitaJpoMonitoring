@@ -22,28 +22,33 @@ import fr.epita.jpo.monitoring.model.School;
 
 public class MainActivity extends Activity {
 
+    private ArrayList<School> mArrayOfUsers;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        // Construct the data source
-        ArrayList<School> arrayOfUsers = new ArrayList<School>();
-        arrayOfUsers.add(getNewSchool("Lyon", false));
-        arrayOfUsers.add(getNewSchool("Paris", false));
-        arrayOfUsers.add(getNewSchool("Rennes", true, R.drawable.epita_site_rennes));
-        arrayOfUsers.add(getNewSchool("Strasbourg", false));
-        arrayOfUsers.add(getNewSchool("Toulouse", false));
+        // Load data
+        loadData();
 
         // Create the adapter to convert the array to views
-        UsersAdapter adapter = new UsersAdapter(this, arrayOfUsers);
+        UsersAdapter adapter = new UsersAdapter(this, mArrayOfUsers);
 
         // Attach the adapter to a ListView
         ListView listView = (ListView) findViewById(R.id.list);
         listView.setAdapter(adapter);
     }
 
+    private void loadData() {
+        // Construct the data source
+        mArrayOfUsers = new ArrayList<School>();
+        mArrayOfUsers.add(getNewSchool("Lyon", false));
+        mArrayOfUsers.add(getNewSchool("Paris", false));
+        mArrayOfUsers.add(getNewSchool("Rennes", true, R.drawable.epita_site_rennes));
+        mArrayOfUsers.add(getNewSchool("Strasbourg", false));
+        mArrayOfUsers.add(getNewSchool("Toulouse", false));
+    }
 
     private void onSelect(School school) {
         Toast.makeText(this, school.mName, Toast.LENGTH_SHORT).show();
@@ -83,7 +88,6 @@ public class MainActivity extends Activity {
             // Populate the data into the template view using the data object
             viewText.setText(school.mName);
             imageView.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, school.mImgId));
-
 
             convertView.setTag(position);
             if (school.mEnable) {
