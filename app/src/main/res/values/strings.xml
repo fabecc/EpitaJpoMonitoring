@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">EPITA Jpo Monitoring</string>
+    <string name="title_activity_check_point">CheckPointActivity</string>
+</resources>
