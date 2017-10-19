@@ -9,18 +9,18 @@ import fr.epita.jpo.monitoring.R;
 public class Step {
 
     // Data model
+    public String mId = "";
     public String mName = "";
     public String mTime = "1h24min";
     public int mImgId = R.drawable.epita_logo_mini;
 
-    // Some element use on application life cycle
-    public boolean mEnable = true;
-
-    public Step(String name) {
+    public Step(String id, String name) {
+        mId = id;
         mName = name;
     }
 
-    public Step(String name, int imgId) {
+    public Step(String id, String name, int imgId) {
+        mId = id;
         mName = name;
         mImgId = imgId;
     }

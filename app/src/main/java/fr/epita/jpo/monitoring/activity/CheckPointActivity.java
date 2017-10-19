@@ -18,14 +18,19 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import fr.epita.jpo.monitoring.R;
+import fr.epita.jpo.monitoring.model.JpoRunningData;
 import fr.epita.jpo.monitoring.model.Step;
 
 public class CheckPointActivity extends Activity {
 
     // Data
     private ArrayList<Step> mSteps;
+    private JpoRunningData mCurrentJpoData;
 
     // Graphics
+    private ListView mListView;
+    private UsersAdapter mAdapter;
+
     private Button btCancel;
     private Button btValid;
     private Button btComment;
@@ -37,29 +42,31 @@ public class CheckPointActivity extends Activity {
 
         // Load data
         loadData();
+        mCurrentJpoData = new JpoRunningData();
+        mCurrentJpoData.mStartTime = System.currentTimeMillis() / 1000;
 
         // Load graphics
         loadGraphics();
 
         // Create the adapter to convert the array to views
-        UsersAdapter adapter = new UsersAdapter(this, mSteps);
+        mAdapter = new UsersAdapter(this, mSteps);
 
         // Attach the adapter to a ListView
-        ListView listView = (ListView) findViewById(R.id.list);
-        listView.setAdapter(adapter);
+        mListView = (ListView) findViewById(R.id.list);
+        mListView.setAdapter(mAdapter);
     }
 
     private void loadData() {
         // Construct the data source
         mSteps = new ArrayList<Step>();
-        mSteps.add(new Step("Accueil Epitech", R.drawable.epita_site_rennes_step_accueil_epitech));
-        mSteps.add(new Step("Accueil EPITA",   R.drawable.epita_site_rennes_step_accueil_epita));
-        mSteps.add(new Step("Amphi",           R.drawable.epita_site_rennes_step_amphi));
-        mSteps.add(new Step("Salle îlot",      R.drawable.epita_site_rennes_step_salle_ilot));
-        mSteps.add(new Step("Salle Machine",   R.drawable.epita_site_rennes_step_salle_machine));
-        mSteps.add(new Step("Salle de cours",  R.drawable.epita_site_rennes_step_salle_cours));
-        mSteps.add(new Step("MiniLab",         R.drawable.epita_site_rennes_step_minilab));
-        mSteps.add(new Step("Fin de visite",   R.drawable.epita_site_rennes_step_fin_de_visite));
+        mSteps.add(new Step("step-accueil-epitech",  "Accueil Epitech", R.drawable.epita_site_rennes_step_accueil_epitech));
+        mSteps.add(new Step("step-accueil-epita",    "Accueil EPITA",   R.drawable.epita_site_rennes_step_accueil_epita));
+        mSteps.add(new Step("step-amphi",            "Amphi",           R.drawable.epita_site_rennes_step_amphi));
+        mSteps.add(new Step("step-salle-ilot",       "Salle îlot",      R.drawable.epita_site_rennes_step_salle_ilot));
+        mSteps.add(new Step("step-salle-machine",    "Salle Machine",   R.drawable.epita_site_rennes_step_salle_machine));
+        mSteps.add(new Step("step-salle-cours",      "Salle de cours",  R.drawable.epita_site_rennes_step_salle_cours));
+        mSteps.add(new Step("step-minilab",          "MiniLab",         R.drawable.epita_site_rennes_step_minilab));
+        mSteps.add(new Step("step-fin-de-visite",    "Fin de visite",   R.drawable.epita_site_rennes_step_fin_de_visite));
     }
 
     private void loadGraphics() {
@@ -88,6 +95,10 @@ public class CheckPointActivity extends Activity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+    }
+
     private void onComment() {
         Toast.makeText(this, "Add comment ?", Toast.LENGTH_SHORT).show();
     }
@@ -101,6 +112,7 @@ public class CheckPointActivity extends Activity {
     }
 
     private void onSelect(Step step) {
+        mCurrentJpoData.addStep(step);
         Toast.makeText(this, step.mName, Toast.LENGTH_SHORT).show();
     }
 
@@ -124,24 +136,24 @@ public class CheckPointActivity extends Activity {
 
             // Populate the data into the template view using the data object
             txtName.setText(step.mName);
-            txtTime.setText(step.mTime);
             imageView.setImageDrawable(ContextCompat.getDrawable(CheckPointActivity.this, step.mImgId));
-
             convertView.setTag(position);
-            if (step.mEnable) {
+
+            // Adapt cell if step is not already join
+            if (!mCurrentJpoData.mStep.containsKey(step.mId)) {
+                // TODO: Find a way to display on click event
                 convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        int position = (Integer) view.getTag();
-                        // Access the row position here to get the correct data item
-                        Step step = getItem(position);
-
-                        // Do what you want here...
-                        onSelect(step);
+                        onSelect(getItem((Integer)view.getTag()));
+                        mAdapter.notifyDataSetChanged();
                     }
                 });
                 txtName.setTextColor(Color.WHITE);
+                txtTime.setTextColor(Color.WHITE);
+                txtTime.setText("-");
             }
+            // Adapt cell if step is already join
             else {
                 // TODO: Find a way to display on click event
                 convertView.setOnClickListener(new View.OnClickListener() {
@@ -150,7 +162,9 @@ public class CheckPointActivity extends Activity {
                     }
                 });
                 txtName.setTextColor(Color.GRAY);
-            }
+                txtTime.setTextColor(Color.GRAY);
+                txtTime.setText(Long.toString(mCurrentJpoData.mStep.get(step.mId)));
+        }
 
             // Return the completed view to render on screen
             return convertView;
