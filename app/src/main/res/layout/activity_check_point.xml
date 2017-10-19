@@ -64,21 +64,21 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
-            android:text="Comment"/>
+            android:text="Commentaire"/>
 
         <Button
             android:id="@+id/btValid"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
-            android:text="Ok"/>
+            android:text="Valider"/>
 
         <Button
             android:id="@+id/btCancel"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
-            android:text="Delete"/>
+            android:text="Supprimer"/>
 
     </LinearLayout>
 

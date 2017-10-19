@@ -1,15 +1,19 @@
 package fr.epita.jpo.monitoring.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -121,6 +125,7 @@ public class CheckPointActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+        onCancel();
     }
 
     private void udpateTime() {
@@ -136,15 +141,78 @@ public class CheckPointActivity extends Activity {
     }
 
     private void onComment() {
-        Toast.makeText(this, "Add comment ?", Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Ajouter un commentaire");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+
+        // Specify the type of input expected
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setText(mCurrentJpoData.mComment);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mCurrentJpoData.mComment = input.getText().toString();
+            }
+        });
+        builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     private void onValid() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Voulez-vous terminer la visite ?");
+
+        // Set up the buttons
+        builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                validAndFinishVisit();
+            }
+        });
+        builder.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void validAndFinishVisit() {
         finish();
     }
 
     private void onCancel() {
-        finish();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Voulez-vous annuler la visite ?");
+
+        // Set up the buttons
+        builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     private void onSelect(Step step) {
