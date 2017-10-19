@@ -63,18 +63,21 @@
             android:id="@+id/btComment"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="0.33"
             android:text="Comment"/>
 
         <Button
             android:id="@+id/btValid"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="0.33"
             android:text="Ok"/>
 
         <Button
             android:id="@+id/btCancel"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="0.33"
             android:text="Delete"/>
 
     </LinearLayout>

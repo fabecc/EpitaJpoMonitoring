@@ -31,9 +31,10 @@ public class CheckPointActivity extends Activity {
     private ListView mListView;
     private UsersAdapter mAdapter;
 
-    private Button btCancel;
-    private Button btValid;
-    private Button btComment;
+    private TextView mTxtTime;
+    private Button mBtCancel;
+    private Button mBtValid;
+    private Button mBtComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,8 @@ public class CheckPointActivity extends Activity {
         // Attach the adapter to a ListView
         mListView = (ListView) findViewById(R.id.list);
         mListView.setAdapter(mAdapter);
+
+        udpateTime();
     }
 
     private void loadData() {
@@ -70,33 +73,66 @@ public class CheckPointActivity extends Activity {
     }
 
     private void loadGraphics() {
-        btCancel = (Button)findViewById(R.id.btCancel);
-        btCancel.setOnClickListener(new View.OnClickListener() {
+        mBtCancel = (Button)findViewById(R.id.btCancel);
+        mBtCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onCancel();
             }
         });
 
-        btValid = (Button)findViewById(R.id.btValid);
-        btValid.setOnClickListener(new View.OnClickListener() {
+        mBtValid = (Button)findViewById(R.id.btValid);
+        mBtValid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onValid();
             }
         });
 
-        btComment = (Button)findViewById(R.id.btComment);
-        btComment.setOnClickListener(new View.OnClickListener() {
+        mBtComment = (Button)findViewById(R.id.btComment);
+        mBtComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onComment();
             }
         });
+
+        mTxtTime = (TextView)findViewById(R.id.txtTime);
+
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                udpateTime();
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+        t.start();
     }
 
     @Override
     public void onBackPressed() {
+    }
+
+    private void udpateTime() {
+        mTxtTime.setText(formatTime(mCurrentJpoData.getTimeSinceStart()));
+    }
+
+    private String formatTime(long second) {
+        long hours = second / 3600;
+        long minutes = (second % 3600) / 60;
+        long seconds = second % 60;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     private void onComment() {
@@ -113,7 +149,6 @@ public class CheckPointActivity extends Activity {
 
     private void onSelect(Step step) {
         mCurrentJpoData.addStep(step);
-        Toast.makeText(this, step.mName, Toast.LENGTH_SHORT).show();
     }
 
     private class UsersAdapter extends ArrayAdapter<Step> {
@@ -163,7 +198,8 @@ public class CheckPointActivity extends Activity {
                 });
                 txtName.setTextColor(Color.GRAY);
                 txtTime.setTextColor(Color.GRAY);
-                txtTime.setText(Long.toString(mCurrentJpoData.mStep.get(step.mId)));
+
+                txtTime.setText(formatTime(mCurrentJpoData.mStep.get(step.mId)));
         }
 
             // Return the completed view to render on screen

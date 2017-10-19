@@ -19,6 +19,10 @@ public class JpoRunningData {
     public HashMap<String, Long> mStep = new HashMap<>();
 
     public void addStep(Step step) {
-        mStep.put(step.mId, (System.currentTimeMillis() / 1000) - mStartTime);
+        mStep.put(step.mId, getTimeSinceStart());
+    }
+
+    public long getTimeSinceStart() {
+        return (System.currentTimeMillis() / 1000) - mStartTime;
     }
 }
