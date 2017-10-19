@@ -239,21 +239,22 @@ public class CheckPointActivity extends Activity {
     // Format is
     //
     private String getVisitDataAsCSV() {
+        final char sep = ';';
+
         StringBuilder header = new StringBuilder();
         StringBuilder data = new StringBuilder();
 
         // Start
-        header.append("start").append(',');
-        data.append(new SimpleDateFormat("HH:mm:ss").format(mCurrentJpoData.mStartTimeForHuman)).append(',');
+        header.append("start").append(sep);
+        data.append(new SimpleDateFormat("HH:mm:ss").format(mCurrentJpoData.mStartTimeForHuman)).append(sep);
 
         // Each step
         for(Step step: mSteps) {
-            header.append(step.mId).append(',');
-
+            header.append(step.mId).append(sep);
             if (!mCurrentJpoData.mStep.containsKey(step.mId))
-                data.append(',');
+                data.append(sep);
             else
-                data.append(mCurrentJpoData.mStep.get(step.mId) / 60).append(',');
+                data.append(mCurrentJpoData.mStep.get(step.mId) / 60).append(sep);
         }
 
         header.append("comment");
