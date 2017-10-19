@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +18,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import fr.epita.jpo.monitoring.R;
 import fr.epita.jpo.monitoring.model.JpoRunningData;
@@ -79,11 +76,11 @@ public class CheckPointActivity extends Activity {
         mSteps.add(new Step("step-accueil-epitech",  "Accueil Epitech", R.drawable.epita_site_rennes_step_accueil_epitech));
         mSteps.add(new Step("step-accueil-epita",    "Accueil EPITA",   R.drawable.epita_site_rennes_step_accueil_epita));
         mSteps.add(new Step("step-amphi",            "Amphi",           R.drawable.epita_site_rennes_step_amphi));
-        mSteps.add(new Step("step-salle-ilot",       "Salle Pédago",      R.drawable.epita_site_rennes_step_salle_ilot));
+        mSteps.add(new Step("step-salle-ilot",       "Salle Pédago",    R.drawable.epita_site_rennes_step_salle_ilot));
         mSteps.add(new Step("step-salle-machine",    "Salle Projets",   R.drawable.epita_site_rennes_step_salle_machine));
         mSteps.add(new Step("step-salle-cours",      "Salle de cours",  R.drawable.epita_site_rennes_step_salle_cours));
         mSteps.add(new Step("step-minilab",          "MiniLab",         R.drawable.epita_site_rennes_step_minilab));
-        mSteps.add(new Step("step-fin-de-visite",    "Fin de visite",   R.drawable.epita_site_rennes_step_fin_de_visite));
+        mSteps.add(new Step("step-debrief",          "Debrief",         R.drawable.epita_site_rennes_step_debrief));
     }
 
     private void loadGraphics() {
@@ -217,7 +214,7 @@ public class CheckPointActivity extends Activity {
                 + "\n"
                 + "Commentaire de visite: '" + mCurrentJpoData.mComment + "'\n"
                 + "\n"
-                + "Bonne réception\n";
+                + "Bonne réception.\n";
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("plain/text");
@@ -256,6 +253,8 @@ public class CheckPointActivity extends Activity {
             else
                 data.append(mCurrentJpoData.mStep.get(step.mId) / 60).append(sep);
         }
+        header.append("fin").append(sep);
+        data.append(mCurrentJpoData.getTimeSinceStart() / 60).append(sep);
 
         header.append("comment");
         data.append(mCurrentJpoData.mComment);
