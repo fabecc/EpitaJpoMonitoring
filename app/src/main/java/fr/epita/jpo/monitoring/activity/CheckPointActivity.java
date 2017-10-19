@@ -3,11 +3,13 @@ package fr.epita.jpo.monitoring.activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +21,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import fr.epita.jpo.monitoring.R;
 import fr.epita.jpo.monitoring.model.JpoRunningData;
@@ -40,6 +45,10 @@ public class CheckPointActivity extends Activity {
     private Button mBtValid;
     private Button mBtComment;
 
+    // Internal code
+    private final static String mail = "fabrice.hesling@epita.fr";
+    private final static int CODE_SEND = 12345;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +58,7 @@ public class CheckPointActivity extends Activity {
         loadData();
         mCurrentJpoData = new JpoRunningData();
         mCurrentJpoData.mStartTime = System.currentTimeMillis() / 1000;
+        mCurrentJpoData.mStartTimeForHuman = Calendar.getInstance().getTime();
 
         // Load graphics
         loadGraphics();
@@ -69,14 +79,20 @@ public class CheckPointActivity extends Activity {
         mSteps.add(new Step("step-accueil-epitech",  "Accueil Epitech", R.drawable.epita_site_rennes_step_accueil_epitech));
         mSteps.add(new Step("step-accueil-epita",    "Accueil EPITA",   R.drawable.epita_site_rennes_step_accueil_epita));
         mSteps.add(new Step("step-amphi",            "Amphi",           R.drawable.epita_site_rennes_step_amphi));
-        mSteps.add(new Step("step-salle-ilot",       "Salle îlot",      R.drawable.epita_site_rennes_step_salle_ilot));
-        mSteps.add(new Step("step-salle-machine",    "Salle Machine",   R.drawable.epita_site_rennes_step_salle_machine));
+        mSteps.add(new Step("step-salle-ilot",       "Salle Pédago",      R.drawable.epita_site_rennes_step_salle_ilot));
+        mSteps.add(new Step("step-salle-machine",    "Salle Projets",   R.drawable.epita_site_rennes_step_salle_machine));
         mSteps.add(new Step("step-salle-cours",      "Salle de cours",  R.drawable.epita_site_rennes_step_salle_cours));
         mSteps.add(new Step("step-minilab",          "MiniLab",         R.drawable.epita_site_rennes_step_minilab));
         mSteps.add(new Step("step-fin-de-visite",    "Fin de visite",   R.drawable.epita_site_rennes_step_fin_de_visite));
     }
 
     private void loadGraphics() {
+        int imgId = getIntent().getIntExtra("img-id", -1);
+        if (imgId != -1) {
+            ImageView img = (ImageView)findViewById(R.id.titleImg);
+            img.setImageDrawable(ContextCompat.getDrawable(CheckPointActivity.this, imgId));
+        }
+
         mBtCancel = (Button)findViewById(R.id.btCancel);
         mBtCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,7 +207,59 @@ public class CheckPointActivity extends Activity {
     }
 
     private void validAndFinishVisit() {
-        finish();
+        String data = getVisitDataAsCSV();
+
+        String message = "Bonjour,\n"
+                + "\n"
+                + "Voici les informations suite à une visite pendant la JPO:\n"
+                + "\n"
+                + data
+                + "\n"
+                + "Commentaire de visite: '" + mCurrentJpoData.mComment + "'\n"
+                + "\n"
+                + "Bonne réception\n";
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("plain/text");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mail});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "JPO - Data sur une visite");
+        intent.putExtra(Intent.EXTRA_TEXT, message);
+
+        startActivityForResult(Intent.createChooser(intent, "Send Email"), CODE_SEND);
+//        finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CODE_SEND){
+            finish();
+        }
+    }
+
+    // Format is
+    //
+    private String getVisitDataAsCSV() {
+        StringBuilder header = new StringBuilder();
+        StringBuilder data = new StringBuilder();
+
+        // Start
+        header.append("start").append(',');
+        data.append(new SimpleDateFormat("HH:mm:ss").format(mCurrentJpoData.mStartTimeForHuman)).append(',');
+
+        // Each step
+        for(Step step: mSteps) {
+            header.append(step.mId).append(',');
+
+            if (!mCurrentJpoData.mStep.containsKey(step.mId))
+                data.append(',');
+            else
+                data.append(mCurrentJpoData.mStep.get(step.mId)).append(',');
+        }
+
+        header.append("comment");
+        data.append(mCurrentJpoData.mComment);
+
+        return header.toString() + "\n\n" + data.toString() + "\n";
     }
 
     private void onCancel() {

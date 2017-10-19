@@ -1,5 +1,6 @@
 package fr.epita.jpo.monitoring.model;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -17,6 +18,7 @@ public class JpoRunningData {
 
     // All step during the visite with time of each step (time in s relative to start time)
     public HashMap<String, Long> mStep = new HashMap<>();
+    public Date mStartTimeForHuman;
 
     public void addStep(Step step) {
         mStep.put(step.mId, getTimeSinceStart());

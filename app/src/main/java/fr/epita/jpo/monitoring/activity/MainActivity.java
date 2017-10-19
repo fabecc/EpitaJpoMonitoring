@@ -51,9 +51,8 @@ public class MainActivity extends Activity {
     }
 
     private void onSelect(School school) {
-        Toast.makeText(this, school.mName, Toast.LENGTH_SHORT).show();
-
         Intent intent = new Intent(this, CheckPointActivity.class);
+        intent.putExtra("img-id", school.mImgId);
         startActivity(intent);
     }
 
