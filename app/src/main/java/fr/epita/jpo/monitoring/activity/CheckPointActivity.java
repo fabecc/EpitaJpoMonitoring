@@ -253,7 +253,7 @@ public class CheckPointActivity extends Activity {
             if (!mCurrentJpoData.mStep.containsKey(step.mId))
                 data.append(',');
             else
-                data.append(mCurrentJpoData.mStep.get(step.mId)).append(',');
+                data.append(mCurrentJpoData.mStep.get(step.mId) / 60).append(',');
         }
 
         header.append("comment");
