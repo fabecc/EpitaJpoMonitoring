@@ -1,19 +1,24 @@
-package fr.epita.jpo.monitoring;
+package fr.epita.jpo.monitoring.activity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import fr.epita.jpo.monitoring.R;
+import fr.epita.jpo.monitoring.model.School;
 
 public class MainActivity extends Activity {
 
@@ -23,14 +28,13 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
 
-
         // Construct the data source
         ArrayList<School> arrayOfUsers = new ArrayList<School>();
-        arrayOfUsers.add(new School("Lyon", false));
-        arrayOfUsers.add(new School("Paris", false));
-        arrayOfUsers.add(new School("Rennes", true));
-        arrayOfUsers.add(new School("Strasbourg", false));
-        arrayOfUsers.add(new School("Toulouse", false));
+        arrayOfUsers.add(getNewSchool("Lyon", false));
+        arrayOfUsers.add(getNewSchool("Paris", false));
+        arrayOfUsers.add(getNewSchool("Rennes", true, R.drawable.epita_site_rennes));
+        arrayOfUsers.add(getNewSchool("Strasbourg", false));
+        arrayOfUsers.add(getNewSchool("Toulouse", false));
 
         // Create the adapter to convert the array to views
         UsersAdapter adapter = new UsersAdapter(this, arrayOfUsers);
@@ -40,11 +44,23 @@ public class MainActivity extends Activity {
         listView.setAdapter(adapter);
     }
 
+
     private void onSelect(School school) {
         Toast.makeText(this, school.mName, Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, CheckPointActivity.class);
         startActivity(intent);
+    }
+
+    private School getNewSchool(String name, boolean enable, int imgId) {
+        School s = new School(name, enable);
+        if (imgId != -1)
+            s.mImgId = imgId;
+        return s;
+    }
+
+    private School getNewSchool(String name, boolean enable) {
+        return getNewSchool(name, enable, -1);
     }
 
     private class UsersAdapter extends ArrayAdapter<School> {
@@ -62,9 +78,12 @@ public class MainActivity extends Activity {
 
             // Lookup view for data population
             TextView viewText = (TextView) convertView.findViewById(R.id.text);
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.img);
 
             // Populate the data into the template view using the data object
             viewText.setText(school.mName);
+            imageView.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, school.mImgId));
+
 
             convertView.setTag(position);
             if (school.mEnable) {
@@ -95,5 +114,6 @@ public class MainActivity extends Activity {
             return convertView;
         }
     }
+
 
 }

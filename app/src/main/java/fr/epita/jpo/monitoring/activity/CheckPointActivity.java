@@ -1,4 +1,4 @@
-package fr.epita.jpo.monitoring;
+package fr.epita.jpo.monitoring.activity;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import fr.epita.jpo.monitoring.R;
+import fr.epita.jpo.monitoring.model.School;
 
 public class CheckPointActivity extends Activity {
 
