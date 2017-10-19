@@ -18,7 +18,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import fr.epita.jpo.monitoring.R;
-import fr.epita.jpo.monitoring.model.School;
 import fr.epita.jpo.monitoring.model.Step;
 
 public class CheckPointActivity extends Activity {
@@ -53,13 +52,14 @@ public class CheckPointActivity extends Activity {
     private void loadData() {
         // Construct the data source
         mSteps = new ArrayList<Step>();
-        mSteps.add(new Step("Accueil Epitech", R.drawable.epita_logo_mini));
-        mSteps.add(new Step("Accueil EPITA", R.drawable.epita_logo_mini));
-        mSteps.add(new Step("Salle îlot", R.drawable.epita_logo_mini));
-        mSteps.add(new Step("Salle Machine", R.drawable.epita_logo_mini));
-        mSteps.add(new Step("Salle de cours", R.drawable.epita_logo_mini));
-        mSteps.add(new Step("MiniLab", R.drawable.epita_logo_mini));
-        mSteps.add(new Step("Fin de visite", R.drawable.epita_logo_mini));
+        mSteps.add(new Step("Accueil Epitech", R.drawable.epita_site_rennes_step_accueil_epitech));
+        mSteps.add(new Step("Accueil EPITA",   R.drawable.epita_site_rennes_step_accueil_epita));
+        mSteps.add(new Step("Amphi",           R.drawable.epita_site_rennes_step_amphi));
+        mSteps.add(new Step("Salle îlot",      R.drawable.epita_site_rennes_step_salle_ilot));
+        mSteps.add(new Step("Salle Machine",   R.drawable.epita_site_rennes_step_salle_machine));
+        mSteps.add(new Step("Salle de cours",  R.drawable.epita_site_rennes_step_salle_cours));
+        mSteps.add(new Step("MiniLab",         R.drawable.epita_site_rennes_step_minilab));
+        mSteps.add(new Step("Fin de visite",   R.drawable.epita_site_rennes_step_fin_de_visite));
     }
 
     private void loadGraphics() {
