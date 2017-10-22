@@ -15,6 +15,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import java.util.ArrayList;
 
 import fr.epita.jpo.monitoring.R;
@@ -38,6 +41,42 @@ public class MainActivity extends Activity {
         // Attach the adapter to a ListView
         ListView listView = (ListView) findViewById(R.id.list);
         listView.setAdapter(adapter);
+
+        // For  crash report
+        checkForUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // For  crash report
+        checkForCrashes();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterManagers();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterManagers();
+    }
+
+    private void checkForCrashes() {
+        CrashManager.register(this);
+    }
+
+    private void checkForUpdates() {
+        // Remove this for store builds!
+        UpdateManager.register(this);
+    }
+
+    private void unregisterManagers() {
+        UpdateManager.unregister();
     }
 
     private void loadData() {

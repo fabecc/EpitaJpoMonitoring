@@ -43,7 +43,8 @@ public class CheckPointActivity extends Activity {
     private Button mBtComment;
 
     // Internal code
-    private final static String mail = "fabrice.hesling@epita.fr";
+    private final static String mail1 = "fabrice.hesling@epita.fr";
+    private final static String mail2 = "alexandre.gerbeau@epita.fr";
     private final static int CODE_SEND = 12345;
 
     @Override
@@ -218,7 +219,7 @@ public class CheckPointActivity extends Activity {
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("plain/text");
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mail});
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mail1, mail2});
         intent.putExtra(Intent.EXTRA_SUBJECT, "JPO - Data sur une visite");
         intent.putExtra(Intent.EXTRA_TEXT, message);
 
